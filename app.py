@@ -49,6 +49,26 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# Initialize database with admin on first request
+def init_db_with_admin():
+    """Initialize database and create admin if not exists"""
+    try:
+        db.create_all()
+        # Check if admin exists
+        admin = User.query.filter_by(username='admin').first()
+        if not admin:
+            admin = User(
+                username='admin',
+                full_name='System Administrator',
+                is_admin=True
+            )
+            admin.set_password('admin123')
+            db.session.add(admin)
+            db.session.commit()
+            print("Admin user created successfully")
+    except Exception as e:
+        print(f"Database initialization: {e}")
+
 # Context processor to make current user available in all templates
 @app.context_processor
 def inject_user():
@@ -63,6 +83,10 @@ def inject_user():
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Initialize database on first access
+    with app.app_context():
+        init_db_with_admin()
+    
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
         if user and user.is_admin:
