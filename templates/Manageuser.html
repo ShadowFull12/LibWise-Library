@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - Library{% endblock %}
+
+{% block extra_css %}
+<style>
+    .content-wrapper {
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    h2 {
+        color: #0d2236;
+        font-size: 2.5em;
+        margin-top: 5px;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+
+    .details {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .details th {
+        background-color: #007BFF;
+        color: white;
+        padding: 12px 15px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    .details td {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        color: #555;
+        vertical-align: middle;
+    }
+
+    .details tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .ar p {
+        margin: 0;
+    }
+
+    .no-users {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-size: 1.2em;
+    }
+
+    @media (max-width: 768px) {
+        .content-wrapper {
+            padding: 10px;
+        }
+
+        .details {
+            font-size: 0.85em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h2>Manage Users</h2>
+
+    {% if user_stats %}
+    <table class="details">
+        <tr>
+            <th><p class="ar">Full Name</p></th>
+            <th><p class="ar">Username</p></th>
+            <th><p class="ar">Active Borrows</p></th>
+            <th><p class="ar">Fine (₹)</p></th>
+        </tr>
+
+        {% for stat in user_stats %}
+        <tr>
+            <td>{{ stat.user.full_name }}</td>
+            <td>{{ stat.user.username }}</td>
+            <td>{{ stat.active_borrows }}</td>
+            <td>{{ stat.total_fine|int }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="no-users">
+        <p>No users registered yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+                <td>15</td>
+                </tr>
+        </table>
+    </div>
+
+</body>
+</html>
