@@ -40,11 +40,32 @@
         }
 
         .alert {
-            padding: 12px 20px;
+            padding: 12px 40px 12px 20px;
             margin-bottom: 10px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             animation: slideIn 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            padding: 0;
+            margin-left: 10px;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
         }
 
         @keyframes slideIn {
@@ -55,6 +76,17 @@
             to {
                 transform: translateX(0);
                 opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
             }
         }
 
@@ -238,10 +270,11 @@
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="flash-messages">
+            <div class="flash-messages" id="flashContainer">
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
+                    <div class="alert alert-{{ category }}" role="alert">
                         {{ message }}
+                        <button type="button" class="close-btn" onclick="this.parentElement.remove()">&times;</button>
                     </div>
                 {% endfor %}
             </div>
@@ -257,18 +290,6 @@
                     });
                 }, 5000);
             </script>
-            <style>
-                @keyframes slideOut {
-                    from {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                    to {
-                        transform: translateX(400px);
-                        opacity: 0;
-                    }
-                }
-            </style>
         {% endif %}
     {% endwith %}
 
