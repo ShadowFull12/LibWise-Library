@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_admin_view %}Borrow Records{% else %}My Books{% endif %} - LibWise{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --success-color: #15803d;
+        --success-bg: #f0fdf4;
+        --overdue-color: #b91c1c;
+        --overdue-bg: #fef2f2;
+        --info-color: #0e7490;
+        --info-bg: #ecfeff;
+    }
+
+    .content-wrapper {
+        padding: 20px;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    h2 {
+        color: #0d2236;
+        font-size: 2.5em;
+        margin-top: 5px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .filter-bar {
+        padding: 15px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        margin-top: 20px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .filter-bar label {
+        font-weight: 500;
+        color: #333;
+        margin-right: 8px;
+    }
+
+    .filter-bar select {
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 0.95em;
+    }
+
+    .details {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .details th {
+        background-color: #007BFF;
+        color: white;
+        padding: 12px 15px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    .details td {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        color: #555;
+        vertical-align: middle;
+    }
+
+    .details tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .ar p {
+        margin: 0;
+    }
+
+    .status-pill {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .status-borrowed {
+        background-color: var(--info-bg);
+        color: var(--info-color);
+    }
+
+    .status-overdue {
+        background-color: var(--overdue-bg);
+        color: var(--overdue-color);
+    }
+
+    .status-returned {
+        background-color: var(--success-bg);
+        color: var(--success-color);
+    }
+
+    .btn-action {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 0.9em;
+        font-weight: 500;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-action:hover {
+        background-color: #0056b3;
+    }
+
+    .no-records {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-size: 1.2em;
+    }
+
+    @media (max-width: 768px) {
+        .content-wrapper {
+            padding: 10px;
+        }
+
+        .details {
+            font-size: 0.8em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h2>{% if is_admin_view %}All Borrow Records{% else %}My Borrowed Books{% endif %}</h2>
+
+    {% if is_admin_view %}
+    <form method="get" action="{{ url_for('borrow_records') }}" class="filter-bar">
+        <label for="status-filter">Filter by Status:</label>
+        <select id="status-filter" name="status" onchange="this.form.submit()">
+            <option value="all" {% if request.args.get('status') == 'all' or not request.args.get('status') %}selected{% endif %}>All Records</option>
+            <option value="borrowed" {% if request.args.get('status') == 'borrowed' %}selected{% endif %}>Currently Borrowed</option>
+            <option value="overdue" {% if request.args.get('status') == 'overdue' %}selected{% endif %}>Overdue</option>
+            <option value="returned" {% if request.args.get('status') == 'returned' %}selected{% endif %}>Returned</option>
+        </select>
+    </form>
+    {% endif %}
+
+    {% if records %}
+    <table class="details">
+        <tr>
+            <th><p class="ar">ID</p></th>
+            {% if is_admin_view %}<th><p class="ar">User</p></th>{% endif %}
+            <th><p class="ar">Book Title</p></th>
+            <th><p class="ar">Borrow Date</p></th>
+            <th><p class="ar">Due Date</p></th>
+            <th><p class="ar">Return Date</p></th>
+            <th><p class="ar">Status</p></th>
+            <th><p class="ar">Fine (₹)</p></th>
+            {% if is_admin_view %}<th><p class="ar">Action</p></th>{% endif %}
+        </tr>
+
+        {% for record in records %}
+        <tr>
+            <td>{{ record.id }}</td>
+            {% if is_admin_view %}<td>{{ record.user.username }}</td>{% endif %}
+            <td>{{ record.book.title }}</td>
+            <td>{{ record.borrow_date|datetime_format }}</td>
+            <td>{{ record.due_date|datetime_format }}</td>
+            <td>{{ record.return_date|datetime_format if record.return_date else 'Not returned' }}</td>
+            <td>
+                <span class="status-pill status-{{ record.status }}">
+                    {{ record.status|capitalize }}
+                </span>
+            </td>
+            <td>{{ record.fine_amount|int }}</td>
+            {% if is_admin_view %}
+            <td>
+                {% if record.status in ['borrowed', 'overdue'] %}
+                <form action="{{ url_for('return_book', record_id=record.id) }}" method="post" style="margin: 0;">
+                    <button type="submit" class="btn-action">Mark Return</button>
+                </form>
+                {% else %}
+                --
+                {% endif %}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="no-records">
+        <p>{% if is_admin_view %}No borrow records found.{% else %}You haven't borrowed any books yet. <a href="{{ url_for('show_books') }}">Browse books</a> to get started!{% endif %}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+        .btn-action {
+            background-color: var(--primary-color); 
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-action:hover {
+            background-color: #0056b3; 
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="navbar-brand-icon">📚</span>
+            <span>Library</span>
+        </div>
+        <div class="navbar-links">
+            <button class="nav-btn">🏠 Home</button>
+            <button class="nav-btn">📖 Borrow Book</button>
+            <button class="nav-btn">📋 Manage Books</button>
+            <button class="nav-btn">👥 Manage Users</button>
+            <button class="nav-btn logout">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <h2>Borrow Book</h2>
+        
+        <div class="filter-bar">
+            <label for="status-filter">Filter by Status:</label>
+            <select id="status-filter">
+                <option value="all">All Records</option>
+                <option value="borrowed">Currently Borrowed</option>
+                <option value="overdue">Overdue</option>
+                <option value="returned">Returned</option>
+            </select>
+        </div> 
+        
+        <table class="details">
+            <tr>
+                <th><p class="ar">ID</p></th>
+                <th><p class="ar">User</p></th>
+                <th><p class="ar">Title</p></th>
+                <th><p class="ar">Borrow Date</p></th>
+                <th><p class="ar">Due Date</p></th>
+                <th><p class="ar">Return Date</p></th>
+                <th><p class="ar">Status</p></th>
+                <th><p class="ar">Fine</p></th>
+                <th><p class="ar">Action</p></th>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>kumaresh123</td>
+                <td>Ad sj</td>
+                <td>2025-11-02</td>
+                <td>2025-11-16</td>
+                <td>Not returned</td>
+                <td><span class="status-pill status-borrowed">Borrowed</span></td>
+                <td>10</td>
+                <td><button class="btn-action">Mark Return</button></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>kumaresh123</td>
+                <td>mgmjj</td>
+                <td>2025-10-30</td>
+                <td>2025-11-13</td>
+                <td>Not returned</td>
+                <td><span class="status-pill status-overdue">Overdue</span></td>
+                <td>20</td>
+                <td><button class="btn-action">Mark Return</button></td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>kumaresh123</td>
+                <td>hd bv</td>
+                <td>2025-10-30</td>
+                <td>2025-11-13</td>
+                <td>2025-10-31</td>
+                <td><span class="status-pill status-returned">Returned</span></td>
+                <td>00</td>
+                <td>--</td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

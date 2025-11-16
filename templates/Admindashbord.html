@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - LibWise{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --background-color: #f4f7f9;
+        --card-background: #ffffff;
+        --success-color: #28a745;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+    }
+
+    .content-wrapper {
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        color: #0d2236;
+        font-size: 2.5em;
+        margin-top: 5px;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+
+    .reports-table {
+        width: 100%;
+        max-width: 1200px;
+        border-collapse: separate;
+        border-spacing: 30px;
+        margin: 20px auto;
+    }
+
+    .reports-table tr {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .reports-table th {
+        flex: 1;
+        min-width: 200px;
+        border-radius: 20px;
+        padding: 25px 18px;
+        background-color: var(--card-background);
+        box-shadow: 0 6px 15px rgb(233, 232, 232);
+        text-align: center;
+        border: 9px solid #e0e0e0;
+    }
+
+    .reports-table .big {
+        font-size: 2.8rem;
+        margin: 0;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .reports-table p {
+        margin: 8px 0 0 0;
+        font-size: 1em;
+        color: var(--secondary-color);
+        font-weight: 500;
+    }
+
+    .reports-table tr th:nth-child(1) .big {
+        color: var(--primary-color);
+    }
+
+    .reports-table tr th:nth-child(2) .big {
+        color: var(--success-color);
+    }
+
+    .reports-table tr th:nth-child(3) .big {
+        color: var(--warning-color);
+    }
+
+    .reports-table tr th:nth-child(4) .big {
+        color: #17a2b8;
+    }
+
+    .nav-table {
+        width: 100%;
+        max-width: 1000px;
+        margin: 30px auto;
+    }
+
+    .nav-table tr {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .nav-table th {
+        background-color: var(--card-background);
+        padding: 12px 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        border: 12px solid #e6e9ee;
+    }
+
+    .nav-table th a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 700;
+        padding: 6px 8px;
+        display: inline-block;
+    }
+
+    .nav-table th a:hover {
+        color: #0056b3;
+    }
+
+    h3 {
+        text-align: center;
+        margin-top: 28px;
+        font-size: 1.8em;
+        color: #333;
+    }
+
+    @media (max-width: 768px) {
+        .reports-table tr,
+        .nav-table tr {
+            flex-direction: column;
+        }
+
+        .reports-table th,
+        .nav-table th {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h1>Admin Dashboard</h1>
+
+    <table class="reports-table">
+        <tr>
+            <th>
+                <p class="big"><b>📚</b><b>{{ total_books }}</b></p>
+                <p><b>Total Book</b></p>
+            </th>
+            <th>
+                <p class="big"><b>👥</b><b>{{ total_users }}</b></p>
+                <p><b>Registered User</b></p>
+            </th>
+            <th>
+                <p class="big"><b>⚠️</b><b>{{ overdue_count }}</b></p>
+                <p><b>Overdue Book</b></p>
+            </th>
+            <th>
+                <p class="big"><b>📖</b><b>{{ active_borrows }}</b></p>
+                <p><b>Active Borrows</b></p>
+            </th>
+        </tr>
+    </table>
+
+    <h3>Quick Actions</h3>
+    <table class="nav-table">
+        <tr>
+            <th><a href="{{ url_for('add_book') }}"><b>➕</b> Add New Book</a></th>
+            <th><a href="{{ url_for('manage_users') }}"><b>👥</b> Manage Users</a></th>
+            <th><a href="{{ url_for('manage_books') }}"><b>📋</b> Manage Books</a></th>
+            <th><a href="{{ url_for('borrow_records') }}"><b>📜</b> Borrow Record</a></th>
+        </tr>
+    </table>
+</div>
+{% endblock %}
+            font-weight: 500;
+            margin: 0;
+            text-align: center;
+        }
+        .feature tr th:first-child {
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .reports-table { 
+            width:50%; 
+            border-collapse: separate; 
+            border-spacing:30px;
+            margin: 20px auto; 
+        }
+
+        .reports-table tr {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .reports-table th { 
+            min-width: 250px;
+            border-radius:20px; 
+            padding: 25px 18px; 
+            background-color: var(--card-background); 
+            box-shadow: 0 6px 15px rgb(233, 232, 232); 
+            text-align: center;
+            border: 9px solid #e0e0e0; 
+        }
+        .reports-table .big { 
+            font-size: 2.8rem; 
+            margin: 0;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .reports-table p { 
+            margin: 8px 0 0 0;
+            font-size: 1em;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        .reports-table tr th:nth-child(1) .big {
+            color: var(--primary-color);
+        }
+        .reports-table tr th:nth-child(2) .big {
+            color: var(--success-color);
+        }
+        .reports-table tr th:nth-child(3) .big {
+            color: var(--warning-color);
+        }
+        .reports-table tr th:nth-child(4) .big {
+            color: #17a2b8; 
+        }
+
+
+
+
+
+        .nav-table {
+            width: 100%;
+            margin-top: 30px;
+        }
+        .nav-table tr {
+            display: flex;
+            justify-content: center;
+            gap:20px;
+        }
+        .nav-table th {
+            background-color: var(--card-background);
+            padding: 12px 12px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            border: 12px solid #e6e9ee;
+        }
+        .nav-table th a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            padding: 6px 8px;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="navbar-brand-icon">📚</span>
+            <span>Library</span>
+        </div>
+        <div class="navbar-links">
+            
+            <button class="nav-btn logout">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <h1>Admin Dashboard</h1>
+
+        <table class="reports-table">
+                <tr>
+                    <th><p class="big"> <b>📚</b><b>1</b></p><p><b>Total Book</b></p></th>
+
+                    <th><p class="big"><b>👥</b><b>2</b></p><p><b> Registered User</b></p></th>
+
+                    <th ><p class="big"><b>⚠️</b><b>3</b></p><p><b>Overdue Book</b></p></th>
+                    <th ><p class="big"><b>📖</b><b>4</b></p><p><b>Active Borrows</b></p></th>
+                </tr>
+            </table>
+            <h3 style="text-align:center; margin-top:28px">Quick Actions</h3>
+            <table class="nav-table">
+                <tr>
+                    <th><a href="#"><b>➕</b>Add New Book</a></th>
+                    <th><a href="#"><b>💰</b>Fine Amount</a></th>
+                    <th><a href="#"><b>🔍</b>View Borrows</a></th>
+                    <th><a href="#"><b>📜</b>Borrow Record</a></th>
+                </tr>
+        </table>
+    </div>
+    </body>
+</html>

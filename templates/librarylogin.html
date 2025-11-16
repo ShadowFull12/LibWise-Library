@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LibWise</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: url('https://images.pexels.com/photos/2952871/pexels-photo-2952871.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 450px;
+            margin: 20px;
+        }
+
+        h1 {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+
+        .login-form {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 32px;
+            color: #1a1a2e;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6C63FF;
+        }
+
+        button {
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, #6C63FF 0%, #5a52d5 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .signup-link a {
+            color: #6C63FF;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .demo-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0f8ff;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .demo-info strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>📚 LibWise</h1>
+        <form method="POST" action="{{ url_for('login') }}" class="login-form">
+            <h2>Login</h2>
+            
+            <label for="user">Username:</label>
+            <input type="text" id="user" name="user" required>
+
+            <label for="pass">Password:</label>
+            <input type="password" id="pass" name="pass" required>
+
+            <button type="submit">Login</button>
+
+            <div class="signup-link">
+                Don't have an account? <a href="{{ url_for('signup') }}">Sign up here</a>
+            </div>
+
+            <div class="demo-info">
+                <strong>Demo Credentials:</strong><br>
+                Admin: <code>admin</code> / <code>admin123</code><br>
+                User: <code>user</code> / <code>user123</code>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

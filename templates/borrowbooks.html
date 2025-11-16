@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Books - LibWise{% endblock %}
+
+{% block extra_css %}
+<style>
+    .header {
+        padding: 20px 40px;
+    }
+
+    h2 {
+        margin: 20px 40px;
+        font-size: 28px;
+        color: #333;
+    }
+
+    .search-box {
+        width: 80%;
+        max-width: 1000px;
+        margin: 20px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .search-box input, .search-box select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        flex: 1;
+        font-size: 14px;
+    }
+
+    .search-box button {
+        padding: 10px 20px;
+        background: #1e80ff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .search-box button:hover {
+        background: #0d6efd;
+    }
+
+    .books-container {
+        width: 90%;
+        max-width: 1400px;
+        margin: 30px auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 25px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    .card-top {
+        height: 140px;
+        background: linear-gradient(135deg, #4e6bff, #7b42f6);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+
+    .tag {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        padding: 5px 12px;
+        font-size: 12px;
+        border-radius: 15px;
+        font-weight: 600;
+    }
+
+    .card-content {
+        padding: 15px;
+    }
+
+    .card-content p {
+        margin: 8px 0;
+        color: #555;
+    }
+
+    .card-content strong {
+        color: #333;
+        font-size: 1.1em;
+    }
+
+    .available {
+        color: green;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .unavailable {
+        color: red;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .btn {
+        background: #1e80ff;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        display: inline-block;
+        margin-top: 10px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .btn:hover {
+        background: #0d6efd;
+    }
+
+    .btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+
+    .no-books {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-size: 1.2em;
+    }
+
+    @media (max-width: 768px) {
+        .search-box {
+            width: 90%;
+            flex-direction: column;
+        }
+
+        .books-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h2>Browse Our Collection</h2>
+</div>
+
+<!-- Search Bar -->
+<form action="{{ url_for('show_books') }}" method="get" class="search-box">
+    <input type="text" name="q" placeholder="Search by title, author, or ISBN..." value="{{ request.args.get('q', '') }}">
+    <select name="category">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+            <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Search</button>
+</form>
+
+<!-- Book Grid -->
+<div class="books-container">
+    {% if books %}
+        {% for book in books %}
+        <div class="card">
+            <div class="card-top">
+                <span class="tag">{{ book.category or 'General' }}</span>
+                📚
+            </div>
+            <div class="card-content">
+                <p><strong>{{ book.title }}</strong></p>
+                <p>by {{ book.author }}</p>
+                <p>ISBN: {{ book.isbn }}</p>
+                {% if book.is_available() %}
+                    <p class="available">✔ {{ book.available_copies }} Copies Available</p>
+                    <form action="{{ url_for('borrow_book', book_id=book.id) }}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn">Borrow Book</button>
+                    </form>
+                {% else %}
+                    <p class="unavailable">✘ Not Available</p>
+                    <button class="btn" disabled>Not Available</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-books">
+            <p>No books found. Try a different search.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+            color: green;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .btn {
+            background: #1e80ff;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .navbar-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="navbar-brand-icon">📚</span>
+            <span>Library</span>
+        </div>
+        <div class="navbar-links">
+            <button class="nav-btn">🏠 Home</button>
+            <button class="nav-btn">📖 Borrow Book</button>
+            <button class="nav-btn">📋 Manage Books</button>
+            <button class="nav-btn">👥 Manage Users</button>
+            <button class="nav-btn">� Borrow Records</button>
+            <button class="nav-btn logout">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Browse Our Collection</h2>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-box">
+        <input type="text" placeholder="Search by title, author, or ISBN...">
+        <button>Search</button>
+        <select>
+            <option>All Categories</option>
+            <option>Fiction</option>
+            <option>Science</option>
+            <option>Romance</option>
+            <option>Technology</option>
+        </select>
+    </div>
+
+    <!-- Book Grid -->
+    <div class="container">
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-top">
+                <span class="tag">Category</span>
+            </div>
+            <div class="card-content">
+                <p><strong>Book Title</strong></p>
+                <p>by Author Name</p>
+                <p class="available">✔ Copies Available</p>
+                <a class="btn" href="#">View Details</a>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-top">
+                <span class="tag">Category</span>
+            </div>
+            <div class="card-content">
+                <p><strong>Book Title</strong></p>
+                <p>by Author Name</p>
+                <p class="available">✔ Copies Available</p>
+                <a class="btn" href="#">View Details</a>
+            </div>
+        </div>
+
+       
+
+    </div>
+
+</body>
+</html>

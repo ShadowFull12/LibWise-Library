@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard - LibWise{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root{
+        --accent:#5BA3E0;
+        --muted:#f9fbfd;
+        --card:#ffffff;
+        --text:#222;
+        --glass: rgba(255,255,255,0.8);
+    }
+
+    * {
+        box-sizing: border-box;
+        font-family: Inter, system-ui, Arial, sans-serif;
+    }
+
+    .dashboard-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 0 0 8px 0;
+        font-size: 2.2rem;
+        color: #4a7ba7;
+        font-weight: 700;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 8px 0 18px 0;
+        color: #333;
+        font-weight: 500;
+    }
+
+    h3 {
+        text-align: center;
+        margin-top: 28px;
+        color: #333;
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    /* Search form */
+    .search-form {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin: 18px 0 28px 0;
+    }
+
+    .search-form input[type="text"] {
+        width: 420px;
+        max-width: 70%;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #e3e6f0;
+        background: var(--muted);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+        font-size: 1rem;
+    }
+
+    .search-form input[type="text"]:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(91, 163, 224, 0.1);
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(90deg, #2196F3, #1976D2);
+        box-shadow: 0 6px 18px rgba(33, 150, 243, 0.4);
+        transition: transform .12s ease, box-shadow .12s ease;
+        text-decoration: none;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 26px rgba(33, 150, 243, 0.5);
+        background: linear-gradient(90deg, #1976D2, #1565C0);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+        box-shadow: 0 6px 12px rgba(33, 150, 243, 0.3);
+    }
+
+    /* Card-style table navigation */
+    .nav-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 12px;
+        margin: 0 auto 16px auto;
+    }
+
+    .nav-table th {
+        padding: 20px;
+        border-radius: 14px;
+        background: var(--card);
+        text-align: center;
+        font-size: 1.05rem;
+        box-shadow: 0 6px 20px rgba(16,24,40,0.08);
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+    }
+
+    .nav-table th:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(16,24,40,0.12);
+    }
+
+    .nav-table a {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+        padding: 6px 8px;
+        font-weight: 600;
+    }
+
+    /* Reports table */
+    .reports-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 14px;
+        margin-top: 8px;
+    }
+
+    .reports-table th {
+        border-radius: 12px;
+        padding: 25px 18px;
+        background: var(--card);
+        box-shadow: 0 6px 20px rgba(16,24,40,0.08);
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: default;
+    }
+
+    .reports-table th:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(16,24,40,0.12);
+    }
+
+    .reports-table .big {
+        font-size: 2.5rem;
+        margin: 0;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .reports-table p {
+        margin: 10px 0 0 0;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width:700px) {
+        .search-form {
+            flex-direction: column;
+            align-items: center;
+        }
+        .search-form input[type="text"] {
+            width: 90%;
+        }
+        .nav-table th, .reports-table th {
+            display: block;
+            width: 100%;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>📚 Dashboard</h1>
+    <h2>Welcome To LibWise</h2>
+
+    <form class="search-form" action="{{ url_for('show_books') }}" method="get" aria-label="Search books">
+        <input type="text" name="q" placeholder="🔍 Search books by title, author or ISBN..." aria-label="Search input">
+        <button class="btn" type="submit">Search</button>
+    </form>
+
+    <table class="nav-table" aria-label="Library navigation">
+        <tr>
+            <th style="background:linear-gradient(180deg,#E8F1FB,#D4E6F8); color:#2c5f8d;">
+                <a href="{{ url_for('show_books') }}">📚 Show All Books</a>
+            </th>
+            <th style="background:linear-gradient(180deg,#F0F6FB,#E8F1FB); color:#3d7aa8;">
+                <a href="{{ url_for('show_books') }}">🔍 Browse Collection</a>
+            </th>
+            <th style="background:linear-gradient(180deg,#D0E5FF,#B8D9FF); color:#1e5a8e;">
+                <a href="{{ url_for('my_books') }}">📖 My Borrowed Books</a>
+            </th>
+        </tr>
+    </table>
+
+    <h3>📊 Your Statistics</h3>
+
+    <table class="reports-table" aria-label="Library reports">
+        <tr>
+            <th style="background:linear-gradient(180deg,#F5F9FC,#EEF5FA); color:#1e5a8e; border: 3px solid #d0e5ff;">
+                <p class="big" style="color:#5BA3E0;"><b>₹{{ current_month_fine|int }}</b></p>
+                <p><b>Current Month's Fine</b></p>
+            </th>
+            <th style="background:linear-gradient(180deg,#FFF5F5,#FFE5E5); color:#c82333; border: 3px solid #ffcccc;">
+                <p class="big" style="color:#e74c3c;"><b>{{ books_lost }}</b></p>
+                <p><b>Books Lost</b></p>
+            </th>
+            <th style="background:linear-gradient(180deg,#F0FDF4,#DCFCE7); color:#15803d; border: 3px solid #bbf7d0;">
+                <p class="big" style="color:#22c55e;"><b>{{ books_returned }}</b></p>
+                <p><b>Books Returned</b></p>
+            </th>
+        </tr>
+    </table>
+</div>
+{% endblock %}
