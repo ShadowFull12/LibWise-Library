@@ -5,8 +5,21 @@ from functools import wraps
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
+
+# Configuration - use environment variables for production
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-change-this-in-production')
+
+# Database configuration - support PostgreSQL for Render
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    # Render uses postgres:// but SQLAlchemy needs postgresql://
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    # Local development with SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize database
@@ -588,7 +601,12 @@ def datetime_format(value, format='%Y-%m-%d'):
     return value.strftime(format)
 
 
-if __name__ == '__main__':
-    with app.app_context():
+# Create tables on startup (for both local and production)
+with app.app_context():
+    try:
         db.create_all()
+    except Exception as e:
+        print(f"Database initialization error: {e}")
+
+if __name__ == '__main__':
     app.run(debug=True, port=5000)
