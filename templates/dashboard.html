@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}User Dashboard - Library{% endblock %}
+{% block title %}User Dashboard - LibWise{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -187,7 +187,7 @@
 {% block content %}
 <div class="dashboard-container">
     <h1>📚 Dashboard</h1>
-    <h2>Welcome To Your Library</h2>
+    <h2>Welcome To LibWise</h2>
 
     <form class="search-form" action="{{ url_for('show_books') }}" method="get" aria-label="Search books">
         <input type="text" name="q" placeholder="🔍 Search books by title, author or ISBN..." aria-label="Search input">

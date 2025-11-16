@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Library Management System{% endblock %}</title>
+    <title>{% block title %}LibWise - Smart Library Management{% endblock %}</title>
     
     <style>
         :root {
@@ -212,7 +212,7 @@
     <nav class="navbar">
         <a href="{% if current_user and current_user.is_admin %}{{ url_for('admin_dashboard') }}{% else %}{{ url_for('dashboard') }}{% endif %}" class="navbar-brand">
             <span class="navbar-brand-icon">📚</span>
-            <span>Library</span>
+            <span>LibWise</span>
         </a>
         
         <div class="navbar-links">
@@ -279,7 +279,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 Library Management System. All rights reserved.</p>
+        <p>&copy; 2025 LibWise - Smart Library Management. All rights reserved.</p>
         <p>Developed with ❤️ using Flask & Python</p>
         {% if current_user %}
             <p>Logged in as: <strong>{{ current_user.full_name }}</strong> ({{ current_user.username }})</p>
