@@ -28,6 +28,16 @@ A full-fledged library book borrowing management portal built with Flask, Python
 - **Authentication**: Session-based authentication with password hashing
 - **Styling**: Custom CSS with gradient designs and responsive layout
 
+## Team Members
+
+| Name | Student Code | Role |
+|------|--------------|------|
+| Kumaresh Pradhan | BWU/BTA/24/508 | Frontend |
+| Debosmita Banerjee | BWU/BTA/24/683 | Frontend |
+| Shreya Jana | BWU/BTA/24/527 | Backend |
+| Aritra Mukherjee | BWU/BTA/24/510 | Backend |
+| Anushuya Bose | BWU/BTA/24/509 | Database |
+
 ## Installation
 
 ### Prerequisites
@@ -73,10 +83,9 @@ A full-fledged library book borrowing management portal built with Flask, Python
 - **Username**: `admin`
 - **Password**: `admin123`
 
-### User Accounts
-- **User 1**: `user` / `user123`
-- **User 2**: `alice` / `alice123`
-- **User 3**: `bob` / `bob123`
+### User Account
+- **Username**: `user`
+- **Password**: `user123`
 
 ## Project Structure
 
